@@ -89,19 +89,11 @@ GitHub PR 목록을 보고 선택하여 체크아웃합니다.
 
 이 기능을 통해 현재 저장소의 PR 목록을 확인하고, 선택한 PR의 브랜치로 쉽게 전환할 수 있습니다.
 
-### ghi: GitHub 이슈 목록 조회 및 브랜치 생성
-
-GitHub 이슈 목록을 보고 선택하여 관련 브랜치를 생성합니다.
-
-![ghi 사용 예시](path/to/ghi.gif)
-
-선택한 이슈에 대한 새 브랜치를 빠르게 생성할 수 있어, 이슈 트래킹과 개발 작업을 연결하는 데 유용합니다.
-
 ### gdb: Git 브랜치 삭제
 
 삭제할 Git 브랜치를 선택합니다.
 
-![gdb 사용 예시](path/to/gdb.gif)
+![wezterm-gui_20240827_15h28m_1604](https://github.com/user-attachments/assets/af714f47-feca-4b5f-8ce7-3273b24587a7)
 
 더 이상 필요하지 않은 브랜치를 쉽게 정리할 수 있습니다. 삭제 전 확인 과정을 거쳐 실수를 방지합니다.
 
@@ -115,15 +107,18 @@ stash된 변경사항을 쉽게 관리하고 적용할 수 있습니다.
 
 ### gscb: Git 브랜치 생성
 
-새 Git 브랜치를 생성합니다.
+새 Git 브랜치를 생성합니다. 
+브랜치를 생성 할 때 타입명/이름-이슈번호 형식으로 만듭니다. github cli를 통해 이슈번호를 확인하고 이를 통해 브랜치를 생성 할 수 있습니다.
 
-![gscb 사용 예시](path/to/gscb.gif)
 
 브랜치 타입을 선택하고 이름을 입력하여 일관된 형식의 새 브랜치를 빠르게 생성할 수 있습니다.
 
-### gss: 개선된 Git 상태 확인 기능
+![wezterm-gui_20240827_15h32m_1608](https://github.com/user-attachments/assets/613d5da2-c4d2-47e4-aa56-7f9a9708d091)
 
-개선된 Git 상태 확인 기능을 사용합니다.
+
+### gss: 개선된 Git staged, unstaged 확인 기능
+
+개선된 Git staged 확인 기능을 사용합니다.
 
 ![gss 사용 예시](path/to/gss.gif)
 
