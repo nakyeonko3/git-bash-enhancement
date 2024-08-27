@@ -20,9 +20,31 @@
 - Git
 - [fzf](https://github.com/junegunn/fzf) (대화형 필터링 도구)
 - [GitHub CLI](https://cli.github.com/) (`gh` 명령어)
-- [Starship](https://starship.rs/) (선택사항, 프롬프트 커스터마이징)
+- [Starship](https://starship.rs/) or [Oh My Zsh](https://ohmyz.sh/) (선택사항, 프롬프트 커스터마이징)
+
+
+### fzf 설치 방법
+```
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+```
+### gh 설치 방법
+리눅스에서 gh 설치 방법1
+```
+sudo port install gh
+```
+리눅스에서 gh 설치 방법2
+```
+curl -sS https://webi.sh/gh | sh
+```
+맥에서 설치 방법
+```
+brew install gh
+```
 
 ## 설치
+
+0. **위에 요구사항에 정의한 프로그램들을 설치**
 
 1. 이 저장소를 클론합니다:
 
