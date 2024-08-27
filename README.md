@@ -59,7 +59,7 @@
    ~/.fzf/install
    ```
 
-### GitHub CLI 설치하기
+#### GitHub CLI 설치하기
 1. https://cli.github.com/ 에서 설치 프로그램 다운로드
 2. 설치 프로그램 실행 후 안내에 따라 진행
 
