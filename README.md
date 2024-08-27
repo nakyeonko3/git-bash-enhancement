@@ -1,4 +1,4 @@
-# Git Workflow Enhancement Scripts
+# Git Bash Enhancement Scripts
 
 이 저장소는 Git 워크플로우를 개선하기 위한 Bash 스크립트 모음입니다. 이 스크립트들은 일상적인 Git 작업을 더 효율적이고 사용자 친화적으로 만들어줍니다.
 
