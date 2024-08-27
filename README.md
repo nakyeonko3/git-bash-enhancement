@@ -50,7 +50,7 @@ brew install gh
 
 2. 스크립트를 `.bashrc` 파일에 추가합니다:
 
-현재 리포에 있는 `.bashrc`를 사용하시면 됩니다.
+아래 링크의 텍스트를 복사해서 `~/.bashrc`에 넣습니다.
 [.bashrc 스크립트 링크](./.bashrc)
 
 ```
