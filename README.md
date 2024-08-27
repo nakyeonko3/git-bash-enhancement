@@ -1,8 +1,26 @@
-# Git Bash Enhancement Scripts
+# 🚀 Git Bash Enhancement Scripts
 
 이 저장소는 Git 워크플로우를 개선하기 위한 Bash 스크립트 모음입니다. 이 스크립트들은 일상적인 Git 작업을 더 효율적이고 사용자 친화적으로 만들어줍니다.
 
-## 기능
+## 📋 목차
+- [기능](#-기능)
+- [설치 가이드](#-설치-가이드)
+  - [요구사항(필수 프로그램)](#요구사항필수-프로그램)
+  - [Windows 11/10](#windows-1110)
+  - [macOS](#macos)
+  - [Linux](#linux)
+- [Git Bash Enhancement Scripts 적용 방법](#-git-bash-enhancement-scripts-적용-방법)
+- [사용법](#-사용법)
+  - [gsb: Git 브랜치 확인 및 체크아웃](#gsb-git-브랜치-확인-및-체크아웃)
+  - [ghpr: GitHub PR 목록 조회 및 체크아웃](#ghpr-github-pr-목록-조회-및-체크아웃)
+  - [gdb: Git 브랜치 삭제](#gdb-git-브랜치-삭제)
+  - [gst: Git stash 목록 확인 및 적용](#gst-git-stash-목록-확인-및-적용)
+  - [gscb: Git 브랜치 생성](#gscb-git-브랜치-생성)
+  - [gss: 개선된 Git staged, unstaged 확인 기능](#gss-개선된-git-staged-unstaged-확인-기능)
+  - [ghgist: GitHub Gist 생성 (구현중)](#ghgist-github-gist-생성-구현중)
+  - [glg: Git 로그 확인 및 체크아웃 (구현중)](#glg-git-로그-확인-및-체크아웃-구현중)
+
+## 🛠 기능
 
 1. `gsb`: Git 브랜치 확인 및 체크아웃
 2. `ghpr`: GitHub PR 목록 조회 및 체크아웃
@@ -14,7 +32,7 @@
 8. `ghgist`: GitHub Gist 생성
 9. `glg`: Git 로그 확인 기능 개선 및 체크아웃 기능 추가
 
-## 설치 가이드
+## 📥 설치 가이드
 
 이 가이드는 Windows 11, macOS 및 Linux에서의 설치 과정을 다룹니다.
 
@@ -85,7 +103,7 @@ curl -sS https://webi.sh/gh | sh
 
 참고: GitHub CLI 설치 방법은 Linux 배포판에 따라 다를 수 있습니다. 배포판별 구체적인 안내는 공식 GitHub CLI 문서를 참조하세요.
 
-## 설치
+## 🔧 Git Bash Enhancement Scripts 적용 방법
 
 0. **위에 요구사항에 정의한 프로그램들을 설치**
 
@@ -106,7 +124,7 @@ vi ~/.bashrc
 source ~/.bashrc
 ```
 
-## 사용법
+## 📘 사용법
 
 각 함수는 터미널에서 직접 호출할 수 있습니다. 예를 들어:
 
