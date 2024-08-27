@@ -14,33 +14,76 @@
 8. `ghgist`: GitHub Gist 생성
 9. `glg`: Git 로그 확인 기능 개선 및 체크아웃 기능 추가
 
-## 요구 사항
+# 설치 가이드
 
-- Bash 쉘(window 유저라면 [Git Bash Shell](https://gitforwindows.org/)를 사용)
+이 가이드는 Windows 11, macOS 및 Linux에서의 설치 과정을 다룹니다.
+
+## 요구사항(필수 프로그램)
+모든 OS 플랫폼의 전제 조건
+
+- Bash 셸 (Windows 사용자는 [Git Bash Shell](https://gitforwindows.org/)을 사용해야 함)
 - Git
 - [fzf](https://github.com/junegunn/fzf) (대화형 필터링 도구)
 - [GitHub CLI](https://cli.github.com/) (`gh` 명령어)
-- [Starship](https://starship.rs/) or [Oh My Zsh](https://ohmyz.sh/) (선택사항, 프롬프트 커스터마이징)
 
+## Windows 11/10
 
-### fzf 설치 방법
+### Git Bash 설치하기
+1. https://gitforwindows.org/ 에서 Git for Windows 다운로드
+2. 설치 프로그램 실행 후 안내에 따라 진행
+3. 설치 중 "Use Git and optional Unix tools from the Command Prompt" 선택
+
+### fzf 설치하기
+1. Git Bash 열기
+2. 다음 명령어 실행:
+   ```
+   git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+   ~/.fzf/install
+   ```
+
+### GitHub CLI 설치하기
+1. https://cli.github.com/ 에서 설치 프로그램 다운로드
+2. 설치 프로그램 실행 후 안내에 따라 진행
+
+## macOS
+
+### Homebrew 설치하기 (아직 설치되지 않은 경우)
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### fzf 설치하기
+```
+brew install fzf
+$(brew --prefix)/opt/fzf/install
+```
+
+### GitHub CLI 설치하기
+```
+brew install gh
+```
+
+## Linux
+
+### fzf 설치하기
 ```
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 ```
-### GitHub CLI 설치 방법
-리눅스에서 gh 설치 방법1
+
+### GitHub CLI 설치하기
+
+#### 방법 1 (port 사용)
 ```
 sudo port install gh
 ```
-리눅스에서 gh 설치 방법2
+
+#### 방법 2 (webi 사용)
 ```
 curl -sS https://webi.sh/gh | sh
 ```
-맥에서 설치 방법
-```
-brew install gh
-```
+
+참고: GitHub CLI 설치 방법은 Linux 배포판에 따라 다를 수 있습니다. 배포판별 구체적인 안내는 공식 GitHub CLI 문서를 참조하세요.
 
 ## 설치
 
