@@ -16,7 +16,7 @@
 
 ## 요구 사항
 
-- Bash 쉘
+- Bash 쉘(window 유저라면 [Git Bash Shell](https://gitforwindows.org/)를 사용)
 - Git
 - [fzf](https://github.com/junegunn/fzf) (대화형 필터링 도구)
 - [GitHub CLI](https://cli.github.com/) (`gh` 명령어)
@@ -52,6 +52,10 @@ brew install gh
 
 현재 리포에 있는 `.bashrc`를 사용하시면 됩니다.
 [.bashrc 스크립트 링크](./.bashrc)
+
+```
+vi ~/.bashrc
+```
 
 3. 변경사항을 적용하기 위해 새 터미널을 열거나 다음 명령어를 실행합니다:
 
