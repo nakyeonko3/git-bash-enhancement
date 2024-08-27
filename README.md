@@ -79,7 +79,7 @@ Git 브랜치 목록을 보고 선택하여 체크아웃합니다.
 
 ![gsb 사용 예시](path/to/gsb.gif)
 
-이 기능을 사용하면 로컬 및 원격 브랜치 목록을 쉽게 탐색하고 선택할 수 있습니다. 선택한 브랜치로 즉시 체크아웃됩니다.
+![wezterm-gui_20240827_15h13m_1609](https://github.com/user-attachments/assets/00ebcc1b-3335-4b94-a642-ca17bb622743)
 
 ### ghpr: GitHub PR 목록 조회 및 체크아웃
 
