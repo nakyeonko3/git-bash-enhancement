@@ -23,12 +23,12 @@
 - [Starship](https://starship.rs/) or [Oh My Zsh](https://ohmyz.sh/) (선택사항, 프롬프트 커스터마이징)
 
 
-### [fzf 설치 방법](https://github.com/junegunn/fzf)
+### fzf 설치 방법
 ```
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 ```
-### [GitHub CLI 설치 방법](https://cli.github.com/)
+### GitHub CLI 설치 방법
 리눅스에서 gh 설치 방법1
 ```
 sudo port install gh
