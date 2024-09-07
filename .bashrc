@@ -1,4 +1,3 @@
-
 # Git 브랜치 확인 및 체크아웃
 function gsb() {
     local branches=$(git branch -a --color=always | grep -v HEAD)
@@ -22,29 +21,6 @@ function gsb() {
 
 
 
-# PR 목록 조회 및 체크아웃
-function ghpr() {
-    # PR 목록을 임시 파일에 저장
-    local temp_file=$(mktemp)
-    gh pr list > "$temp_file"
-
-    # fzf를 사용하여 PR 선택
-    local selected_pr=$(cat "$temp_file" | fzf --preview "gh pr view {1}" \
-                                               --header 'Enter: Checkout PR' \
-                                               --height 100% \
-                                               --ansi \
-                                               --cycle)
-
-    # 임시 파일 삭제
-    rm "$temp_file"
-
-    # 선택된 PR 처리
-    if [[ -n "$selected_pr" ]]; then
-        local pr_number=$(echo "$selected_pr" | awk '{print $1}')
-        echo "Checking out PR #$pr_number..."
-        gh pr checkout "$pr_number"
-    fi
-}
 
 
 # 이슈 목록 조회 및 브랜치 생성
@@ -55,8 +31,7 @@ function ghi() {
 
     # fzf를 사용하여 이슈 선택
     local selected_issue=$(cat "$temp_file" | fzf --preview "gh issue view {1}" \
-                                                  --bind 'ctrl-b:execute(gh issue develop {1} -c)+abort' \
-                                                  --header 'Ctrl-B: Create branch for issue' \
+                                                  --header 'ESC: Exit without creating branch' \
                                                   --height 40% \
                                                   --ansi \
                                                   --cycle)
@@ -64,36 +39,106 @@ function ghi() {
     # 임시 파일 삭제
     rm "$temp_file"
 
-    # 선택된 이슈가 있으면 상세 정보 출력
+    # 선택된 이슈가 있으면 상세 정보 출력 및 브랜치 생성 여부 확인
     if [[ -n "$selected_issue" ]]; then
         local issue_number=$(echo "$selected_issue" | awk '{print $1}')
         gh issue view "$issue_number"
+        
+        read -p "Do you want to create a branch for this issue? (y/N) " create_branch
+        if [[ "$create_branch" =~ ^[yY]$ ]]; then
+            local branchTypes=("enhancement" "doc" "bug" "hotfix" "refactor" "test")
+            local branchType=$(printf "%s\n" "${branchTypes[@]}" | fzf --header "Select branch type")
+
+            if [ -n "$branchType" ]; then
+                read -p "Enter branch name: " branchName
+
+                if [ -n "$branchName" ]; then
+                    # Convert branch name to lowercase
+                    branchName=$(echo "$branchName" | tr '[:upper:]' '[:lower:]')
+
+                    local fullBranchName="${branchType}/${branchName}-${issue_number}"
+
+                    echo "Branch to be created: $fullBranchName"
+                    read -p "Create and switch to this branch? (Y/n) " confirmation
+
+                    if [[ -z "$confirmation" || "$confirmation" =~ ^[yY]$ ]]; then
+                        git switch -c "$fullBranchName"
+                        if [ $? -eq 0 ]; then
+                            echo "Successfully created and switched to branch '$fullBranchName'"
+                        else
+                            echo "Failed to create branch '$fullBranchName'"
+                        fi
+                    else
+                        echo "Branch creation cancelled"
+                    fi
+                else
+                    echo "No branch name provided. Branch creation cancelled."
+                fi
+            else
+                echo "No branch type selected. Branch creation cancelled."
+            fi
+        else
+            echo "Branch creation cancelled."
+        fi
+    else
+        echo "No issue selected. Operation cancelled."
     fi
 }
 
-# Git 브랜치 삭제
+
+
+# Git 브랜치 삭제 (로컬 및 리모트)
 function gdb() {
-    local branches=$(git branch | grep -v '^\*' | sed 's/^[ ]*//')
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
+    local branches=$(git branch | sed 's/^[ *]*//' | while read branch; do
+        if [ "$branch" = "$current_branch" ]; then
+            echo -e "\033[32m$branch\033[0m"
+        else
+            echo "$branch"
+        fi
+    done)
     local branchToDelete=$(echo "$branches" | fzf --multi \
                                                   --header="Select branches to delete (use TAB to select multiple)" \
                                                   --preview 'git log --oneline --graph --color=always {}' \
-                                                    --height 40% \
-                                                  --preview-window=right:60%)
+                                                  --height 40% \
+                                                  --preview-window=right:60% \
+                                                  --ansi)
     if [ -n "$branchToDelete" ]; then
         IFS=$'\n' # set the field separator to newline
         for branch in $branchToDelete; do
+            branch=$(echo "$branch" | sed 's/\x1b\[[0-9;]*m//g')  # Remove ANSI color codes
             echo "Branch to delete: $branch"
-            git log -n 5 --oneline "$branch"
-            echo ""
-            read -p "Are you sure you want to delete branch '$branch'? (y/N) " confirmDelete
+            if [ "$branch" = "$current_branch" ]; then
+                echo "Cannot delete the current branch. Switching to another branch first."
+                local other_branch=$(git branch | grep -v "^\*" | sed 's/^[ ]*//' | head -n 1)
+                if [ -n "$other_branch" ]; then
+                    git switch "$other_branch"
+                    echo "Switched to branch '$other_branch'"
+                else
+                    echo "No other branch to switch to. Cannot delete the only branch."
+                    continue
+                fi
+            fi
+            read -p "Are you sure you want to delete local branch '$branch'? (y/N) " confirmDelete
             if [[ "$confirmDelete" =~ ^[yY]$ ]]; then
                 git branch -d "$branch" 2>/dev/null || {
                     echo "Branch '$branch' has unmerged changes. Use -D to force delete. Do you want to force delete? (y/N)"
                     read -r forceDelete
                     if [[ "$forceDelete" =~ ^[yY]$ ]]; then
                         git branch -D "$branch"
+                    else
+                        continue
                     fi
                 }
+                
+                # Check if a remote branch with the same name exists
+                if git ls-remote --exit-code --heads origin "$branch" &>/dev/null; then
+                    read -p "A remote branch '$branch' exists. Do you want to delete it too? (y/N) " confirmRemoteDelete
+                    if [[ "$confirmRemoteDelete" =~ ^[yY]$ ]]; then
+                        git push origin --delete "$branch"
+                        echo "Remote branch '$branch' deleted."
+                    fi
+                fi
             fi
             echo ""
         done
@@ -117,55 +162,49 @@ function gst() {
 # Git 브랜치 생성
 function gscb() {
     local branchTypes=("enhancement" "doc" "bug" "hotfix" "refactor" "test")
-    local branchType=$(printf "%s\n" "${branchTypes[@]}" | fzf --header "Select branch type")
+    local branchType=$(printf "%s\n" "${branchTypes[@]}" | fzf --header "브랜치 타입 선택")
 
     if [ -n "$branchType" ]; then
-        read -p "Enter the branch name (e.g., 'button-component'): " branchName
+        read -p "브랜치 이름을 입력하세요 (예: 'button-component'): " branchName
 
         if [ -n "$branchName" ]; then
-            # Convert branch name to lowercase
+            # 브랜치 이름을 소문자로 변환
             branchName=$(echo "$branchName" | tr '[:upper:]' '[:lower:]')
 
-            # Fetch open issues from GitHub
+            # GitHub에서 열린 이슈 가져오기
             local issues=$(gh issue list --limit 100 --json number,title --jq '.[] | "\(.number): \(.title)"')
-            local selectedIssue=$(echo "$issues" | fzf --header "Select related issue (optional, press ESC to skip)")
+            local selectedIssue=$(echo "$issues" | fzf --header "관련 이슈 선택 (선택사항, ESC로 건너뛰기)")
             
             local issueNumber=""
             if [ -n "$selectedIssue" ]; then
                 issueNumber=$(echo $selectedIssue | cut -d':' -f1)
             fi
 
-            local fullBranchName="$branchType/$branchName"
+            local fullBranchName="${branchType}/${branchName}"
             if [ -n "$issueNumber" ]; then
-                fullBranchName="$fullBranchName-$issueNumber"
+                fullBranchName="${fullBranchName}-${issueNumber}"
             fi
 
-            echo "Branch to be created: $fullBranchName"
-            read -p "Create and switch to this branch? (Y/n) " confirmation
+            echo "생성될 브랜치: $fullBranchName"
+            read -p "이 브랜치를 생성하고 전환하시겠습니까? (Y/n) " confirmation
 
             if [[ -z "$confirmation" || "$confirmation" =~ ^[yY]$ ]]; then
                 git switch -c "$fullBranchName"
                 if [ $? -eq 0 ]; then
-                    echo "Successfully created and switched to branch '$fullBranchName'"
-                    
-                    if [ -n "$issueNumber" ]; then
-                        gh issue develop $issueNumber --base $fullBranchName
-                        echo "Linked branch to issue #$issueNumber"
-                    fi
+                    echo "브랜치 '$fullBranchName'를 성공적으로 생성하고 전환했습니다."
                 else
-                    echo "Failed to create branch '$fullBranchName'"
+                    echo "브랜치 '$fullBranchName' 생성에 실패했습니다."
                 fi
             else
-                echo "Branch creation cancelled"
+                echo "브랜치 생성이 취소되었습니다."
             fi
         else
-            echo "No branch name provided. Operation cancelled."
+            echo "브랜치 이름이 제공되지 않았습니다. 작업이 취소되었습니다."
         fi
     else
-        echo "No branch type selected. Operation cancelled."
+        echo "브랜치 타입이 선택되지 않았습니다. 작업이 취소되었습니다."
     fi
 }
-
 
 # Git 상태 확인 기능 개선
 function gss() {
@@ -228,4 +267,6 @@ function glg() {
         --bind 'ctrl-o:execute(git checkout {1})' \
         --header 'Ctrl-O: Checkout commit' \
         --height 100%
+
 }
+
